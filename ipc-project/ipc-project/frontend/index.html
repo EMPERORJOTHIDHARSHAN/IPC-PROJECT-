@@ -303,15 +303,15 @@
 <nav>
   <div class="logo"><span class="mark"></span>INTERVIEW PREP <small>CORE</small></div>
   <div class="nav-links" id="navLinks">
-    <button data-view="home" class="active">Home</button>
-    <button data-view="aptitude">Aptitude</button>
-    <button data-view="companies">Company Prep</button>
-    <button data-view="interview">AI Mock Interview</button>
-    <button data-view="dashboard">Dashboard</button>
+    <button data-view="home" class="active"id="startHomeBtn">Home</button>
+    <button data-view="aptitude"id="startAptitudeBtn">Aptitude</button>
+    <button data-view="companies"id="startComapanyPrepBtn">Company Prep</button>
+    <button data-view="interview" id="startAIMockInterviewBtn">AI Mock Interview</button>
+    <button data-view="dashboard" id="startDasboardBtn">Dashboard</button>
   </div>
   <div style="display:flex; gap:10px;">
-    <button class="btn ghost" id="loginBtn">Log in</button>
-    <button class="btn primary" id="signupBtn">Sign up</button>
+    <button class="btn ghost" id="startloginBtn">Log in</button>
+    <button class="btn primary" id="startsignupBtn">Sign up</button>
   </div>
 </nav>
 
@@ -325,8 +325,8 @@
         <h1>Stop tab-hopping.<br>Prep from the <span class="grad">Core</span>.</h1>
         <p>Aptitude tests, coding patterns, and HR rounds &mdash; the kind of material spread across Talentely, W3Schools, IndiaBix and GeeksforGeeks &mdash; gathered into a single command center, plus AI-powered mock interviews and real MNC question banks.</p>
         <div class="hero-ctas">
-          <button class="btn primary" onclick="showView('aptitude')">Start a Quiz</button>
-          <button class="btn" onclick="showView('interview')">Try AI Mock Interview</button>
+          <button class="btn primary" onclick="showView('aptitude')" id="startaQuizBtn">Start a Quiz</button>
+          <button class="btn" onclick="showView('interview')" id="startTryAIMockBtn">Try AI Mock Interview</button>
         </div>
       </div>
       <div class="core-system" id="coreSystem">
@@ -420,7 +420,7 @@
       </div>
       <div class="chat-input">
         <input type="text" id="chatInput" placeholder="Type your answer or 'start'..." />
-        <button class="btn primary" id="chatSend">Send</button>
+        <button class="btn primary" id="startchatSendBtn">Send</button>
       </div>
     </div>
   </section>
@@ -454,10 +454,10 @@
 <!-- AUTH MODAL -->
 <div class="modal-overlay" id="authOverlay">
   <div class="modal">
-    <button class="close" id="closeModal">✕</button>
+    <button class="close" id="startcloseModalBtn">✕</button>
     <div class="auth-tabs">
-      <button class="btn active" id="tabLogin">Log in</button>
-      <button class="btn" id="tabSignup">Sign up</button>
+      <button class="btn active" id="starttabLoginBtn">Log in</button>
+      <button class="btn" id="starttabSignupBtn">Sign up</button>
     </div>
     <h3 id="authTitle">Log in to IPC</h3>
     <label>Email</label>
@@ -465,8 +465,8 @@
     <label>Password</label>
     <input type="text" id="authPassword" placeholder="••••••••" />
     <div style="margin-top:18px; display:flex; flex-direction:column; gap:10px;">
-      <button class="btn primary" id="authSubmit">Log in</button>
-      <button class="btn" id="googleAuth">Continue with Google</button>
+      <button class="btn primary" id="startauthSubmitBtn">Log in</button>
+      <button class="btn" id="startgoogleAuthBtn">Continue with Google</button>
     </div>
     <div class="auth-msg" id="authMsg"></div>
   </div>
@@ -475,5 +475,6 @@
 <script type="module" src="firebase-config.js"></script>
 <script src="data.js"></script>
 <script src="app.js"></script>
+  
 </body>
 </html>
