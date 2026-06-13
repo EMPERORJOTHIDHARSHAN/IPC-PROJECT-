@@ -1,0 +1,479 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Interview Preparation Core</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;600;700&family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --bg:#0a0e17;
+    --bg-soft:#0d1320;
+    --surface:#141b2d;
+    --surface-2:#1c2540;
+    --border:#293252;
+    --text:#eaf0ff;
+    --text-dim:#8a93b8;
+    --cyan:#3fe7e2;
+    --violet:#8c6bff;
+    --amber:#ffb454;
+    --green:#5be39d;
+    --red:#ff6b6b;
+    --font-display:'Space Grotesk',sans-serif;
+    --font-body:'Inter',sans-serif;
+    --font-mono:'JetBrains Mono',monospace;
+    --radius:14px;
+  }
+  *{box-sizing:border-box; margin:0; padding:0;}
+  html{scroll-behavior:smooth;}
+  body{
+    background:var(--bg);
+    color:var(--text);
+    font-family:var(--font-body);
+    line-height:1.55;
+    min-height:100vh;
+    overflow-x:hidden;
+  }
+  .bg-grid{
+    position:fixed; inset:0; z-index:-2;
+    background-image:
+      radial-gradient(circle at 15% 20%, rgba(140,107,255,0.18), transparent 35%),
+      radial-gradient(circle at 85% 75%, rgba(63,231,226,0.14), transparent 40%),
+      linear-gradient(rgba(255,255,255,0.025) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(255,255,255,0.025) 1px, transparent 1px);
+    background-size:auto, auto, 48px 48px, 48px 48px;
+  }
+  a{color:inherit; text-decoration:none;}
+  /* NAV */
+  nav{
+    position:sticky; top:0; z-index:50;
+    display:flex; align-items:center; justify-content:space-between;
+    padding:18px 5vw;
+    backdrop-filter:blur(14px);
+    background:rgba(10,14,23,0.55);
+    border-bottom:1px solid var(--border);
+  }
+  .logo{
+    font-family:var(--font-display); font-weight:700; font-size:1.25rem;
+    letter-spacing:0.5px; display:flex; align-items:center; gap:10px;
+  }
+  .logo span.mark{
+    width:30px; height:30px; border-radius:50%;
+    background:radial-gradient(circle at 30% 30%, var(--cyan), var(--violet) 75%);
+    box-shadow:0 0 18px rgba(63,231,226,0.6);
+    display:inline-block;
+  }
+  .logo small{color:var(--text-dim); font-family:var(--font-mono); font-size:0.65rem; font-weight:400; letter-spacing:2px;}
+  .nav-links{display:flex; gap:28px; align-items:center;}
+  .nav-links button{
+    background:none; border:none; color:var(--text-dim); font-family:var(--font-body);
+    font-size:0.92rem; cursor:pointer; padding:6px 2px; position:relative; transition:color .2s;
+  }
+  .nav-links button.active, .nav-links button:hover{color:var(--text);}
+  .nav-links button.active::after{
+    content:""; position:absolute; left:0; right:0; bottom:-6px; height:2px;
+    background:linear-gradient(90deg,var(--cyan),var(--violet)); border-radius:2px;
+  }
+  .btn{
+    font-family:var(--font-display); font-weight:600; font-size:0.9rem;
+    padding:10px 22px; border-radius:999px; border:1px solid var(--border);
+    background:var(--surface-2); color:var(--text); cursor:pointer; transition:all .2s;
+  }
+  .btn:hover{border-color:var(--cyan); box-shadow:0 0 16px rgba(63,231,226,0.25);}
+  .btn.primary{
+    background:linear-gradient(135deg,var(--cyan),var(--violet)); border:none; color:#06101a;
+  }
+  .btn.primary:hover{box-shadow:0 0 24px rgba(140,107,255,0.5); transform:translateY(-1px);}
+  .btn.ghost{background:transparent;}
+
+  /* VIEWS */
+  main{max-width:1180px; margin:0 auto; padding:0 5vw 80px;}
+  .view{display:none; animation:fadeIn .5s ease;}
+  .view.active{display:block;}
+  @keyframes fadeIn{from{opacity:0; transform:translateY(12px);} to{opacity:1; transform:translateY(0);}}
+
+  /* HERO */
+  .hero{
+    display:grid; grid-template-columns:1.1fr 1fr; gap:40px; align-items:center;
+    padding:70px 0 40px; min-height:60vh;
+  }
+  .eyebrow{
+    font-family:var(--font-mono); font-size:0.75rem; letter-spacing:3px; color:var(--cyan);
+    text-transform:uppercase; margin-bottom:18px; display:block;
+  }
+  .hero h1{
+    font-family:var(--font-display); font-size:3.4rem; font-weight:700; line-height:1.08;
+    margin-bottom:20px;
+  }
+  .hero h1 .grad{
+    background:linear-gradient(135deg,var(--cyan),var(--violet));
+    -webkit-background-clip:text; background-clip:text; color:transparent;
+  }
+  .hero p{color:var(--text-dim); font-size:1.05rem; max-width:480px; margin-bottom:30px;}
+  .hero-ctas{display:flex; gap:14px; flex-wrap:wrap;}
+
+  /* CORE ORBIT SYSTEM */
+  .core-system{
+    position:relative; width:100%; height:420px; display:flex; align-items:center; justify-content:center;
+    perspective:1000px;
+  }
+  .core-orb{
+    width:140px; height:140px; border-radius:50%;
+    background:radial-gradient(circle at 32% 28%, #bdfffb, var(--cyan) 35%, var(--violet) 80%);
+    box-shadow:0 0 60px rgba(63,231,226,0.55), 0 0 120px rgba(140,107,255,0.35), inset -10px -10px 30px rgba(0,0,0,0.35);
+    animation:pulse 4.5s ease-in-out infinite;
+    position:relative; z-index:2;
+  }
+  .core-orb::after{
+    content:"CORE"; position:absolute; inset:0; display:flex; align-items:center; justify-content:center;
+    font-family:var(--font-mono); font-size:0.7rem; letter-spacing:3px; color:#06101a; font-weight:600;
+  }
+  @keyframes pulse{0%,100%{transform:scale(1);} 50%{transform:scale(1.06);}}
+  .orbit{
+    position:absolute; top:50%; left:50%; border:1px dashed rgba(140,107,255,0.25); border-radius:50%;
+    transform:translate(-50%,-50%);
+    animation:spin linear infinite;
+  }
+  .orbit-1{width:230px; height:230px; animation-duration:18s;}
+  .orbit-2{width:330px; height:330px; animation-duration:28s; animation-direction:reverse;}
+  .orbit-3{width:400px; height:400px; animation-duration:38s;}
+  @keyframes spin{from{transform:translate(-50%,-50%) rotate(0deg);} to{transform:translate(-50%,-50%) rotate(360deg);}}
+  .badge{
+    position:absolute; top:-15px; left:50%; transform:translateX(-50%);
+    background:var(--surface-2); border:1px solid var(--border); border-radius:999px;
+    padding:6px 14px; font-family:var(--font-mono); font-size:0.72rem; white-space:nowrap;
+    box-shadow:0 4px 14px rgba(0,0,0,0.4);
+    animation:counter-spin linear infinite;
+  }
+  .orbit-1 .badge{animation-duration:18s;}
+  .orbit-2 .badge{animation-duration:28s; animation-direction:reverse;}
+  .orbit-3 .badge{animation-duration:38s;}
+  .orbit-2 .badge.b2{top:auto; bottom:-15px;}
+  .orbit-3 .badge.b2{left:auto; right:-15px; top:50%; transform:translateY(-50%);}
+  .orbit-3 .badge.b3{left:-15px; top:50%; transform:translateY(-50%);}
+  @keyframes counter-spin{from{transform:translateX(-50%) rotate(0deg);} to{transform:translateX(-50%) rotate(-360deg);}}
+
+  /* SOURCE STRIP */
+  .source-strip{
+    border-top:1px solid var(--border); border-bottom:1px solid var(--border);
+    padding:22px 0; display:flex; align-items:center; gap:30px; flex-wrap:wrap; color:var(--text-dim);
+    font-family:var(--font-mono); font-size:0.8rem;
+  }
+  .source-strip span.label{color:var(--text); font-weight:600;}
+
+  /* SECTION HEADERS */
+  .section-head{margin:60px 0 28px;}
+  .section-head .eyebrow{margin-bottom:8px;}
+  .section-head h2{font-family:var(--font-display); font-size:2rem; font-weight:700;}
+  .section-head p{color:var(--text-dim); max-width:600px; margin-top:8px;}
+
+  /* FEATURE CARDS */
+  .grid-3{display:grid; grid-template-columns:repeat(3,1fr); gap:18px;}
+  .grid-2{display:grid; grid-template-columns:repeat(2,1fr); gap:18px;}
+  .card{
+    background:var(--surface); border:1px solid var(--border); border-radius:var(--radius);
+    padding:24px; transition:transform .25s, border-color .25s;
+    transform-style:preserve-3d;
+  }
+  .card:hover{border-color:rgba(63,231,226,0.4);}
+  .card .icon{
+    width:42px; height:42px; border-radius:10px; display:flex; align-items:center; justify-content:center;
+    background:linear-gradient(135deg,rgba(63,231,226,0.18),rgba(140,107,255,0.18));
+    font-size:1.3rem; margin-bottom:14px;
+  }
+  .card h3{font-family:var(--font-display); font-size:1.05rem; margin-bottom:8px;}
+  .card p{color:var(--text-dim); font-size:0.9rem;}
+
+  /* APTITUDE */
+  .quiz-categories{display:flex; gap:12px; margin-bottom:24px; flex-wrap:wrap;}
+  .chip{
+    padding:8px 16px; border-radius:999px; border:1px solid var(--border); background:var(--surface);
+    cursor:pointer; font-size:0.85rem; color:var(--text-dim); transition:all .2s;
+  }
+  .chip.active{color:#06101a; background:linear-gradient(135deg,var(--cyan),var(--violet)); border:none; font-weight:600;}
+  .quiz-box{
+    background:var(--surface); border:1px solid var(--border); border-radius:var(--radius); padding:32px;
+  }
+  .quiz-meta{display:flex; justify-content:space-between; align-items:center; margin-bottom:20px; font-family:var(--font-mono); font-size:0.85rem; color:var(--text-dim);}
+  .timer{color:var(--amber); font-weight:600;}
+  .progress-bar{height:6px; background:var(--surface-2); border-radius:4px; overflow:hidden; margin-bottom:28px;}
+  .progress-fill{height:100%; background:linear-gradient(90deg,var(--cyan),var(--violet)); width:0%; transition:width .3s;}
+  .q-text{font-family:var(--font-display); font-size:1.2rem; margin-bottom:20px;}
+  .options{display:flex; flex-direction:column; gap:10px;}
+  .option{
+    padding:14px 16px; border:1px solid var(--border); border-radius:10px; cursor:pointer;
+    transition:all .15s; font-size:0.95rem;
+  }
+  .option:hover{border-color:var(--cyan); background:rgba(63,231,226,0.05);}
+  .option.selected{border-color:var(--violet); background:rgba(140,107,255,0.12);}
+  .option.correct{border-color:var(--green); background:rgba(91,227,157,0.12);}
+  .option.incorrect{border-color:var(--red); background:rgba(255,107,107,0.12);}
+  .quiz-nav{display:flex; justify-content:space-between; margin-top:28px;}
+  .result-box{text-align:center; padding:40px 0;}
+  .result-box .score{font-family:var(--font-display); font-size:3.2rem; font-weight:700;
+    background:linear-gradient(135deg,var(--cyan),var(--violet)); -webkit-background-clip:text; background-clip:text; color:transparent;}
+
+  /* COMPANIES */
+  .company-grid{display:grid; grid-template-columns:repeat(4,1fr); gap:14px;}
+  .company-card{
+    background:var(--surface); border:1px solid var(--border); border-radius:var(--radius);
+    padding:20px; cursor:pointer; text-align:center; transition:all .2s;
+  }
+  .company-card:hover{transform:translateY(-4px); border-color:var(--cyan); box-shadow:0 10px 30px rgba(0,0,0,0.4);}
+  .company-card .ticker{font-family:var(--font-mono); font-size:0.7rem; color:var(--text-dim); margin-bottom:6px;}
+  .company-card h4{font-family:var(--font-display); font-size:1.1rem;}
+  .company-detail{
+    margin-top:24px; background:var(--surface); border:1px solid var(--border); border-radius:var(--radius);
+    padding:28px; display:none;
+  }
+  .company-detail.active{display:block; animation:fadeIn .4s ease;}
+  .company-detail h3{font-family:var(--font-display); font-size:1.4rem; margin-bottom:6px;}
+  .company-detail .pattern{color:var(--text-dim); font-size:0.9rem; margin-bottom:18px;}
+  .rounds{display:flex; gap:10px; flex-wrap:wrap; margin-bottom:20px;}
+  .round-tag{
+    background:var(--surface-2); border:1px solid var(--border); border-radius:999px; padding:6px 14px;
+    font-family:var(--font-mono); font-size:0.75rem;
+  }
+  .pyq{border-top:1px solid var(--border); padding:16px 0;}
+  .pyq:first-child{border-top:none; padding-top:0;}
+  .pyq .meta{display:flex; gap:8px; margin-bottom:6px; font-family:var(--font-mono); font-size:0.7rem; color:var(--text-dim);}
+  .tag{background:var(--surface-2); border-radius:6px; padding:2px 8px;}
+  .tag.year{color:var(--amber); border:1px solid rgba(255,180,84,0.3);}
+
+  /* MOCK INTERVIEW */
+  .mock-setup{display:grid; grid-template-columns:1fr 1fr; gap:16px; margin-bottom:20px;}
+  select, input[type=text]{
+    width:100%; background:var(--surface-2); border:1px solid var(--border); border-radius:10px;
+    padding:12px 14px; color:var(--text); font-family:var(--font-body); font-size:0.92rem;
+  }
+  .chat-window{
+    background:var(--surface); border:1px solid var(--border); border-radius:var(--radius);
+    height:420px; display:flex; flex-direction:column;
+  }
+  .chat-messages{flex:1; overflow-y:auto; padding:24px; display:flex; flex-direction:column; gap:14px;}
+  .msg{max-width:75%; padding:12px 16px; border-radius:14px; font-size:0.92rem; line-height:1.5;}
+  .msg.ai{background:var(--surface-2); border:1px solid var(--border); align-self:flex-start; border-bottom-left-radius:4px;}
+  .msg.user{background:linear-gradient(135deg,var(--cyan),var(--violet)); color:#06101a; align-self:flex-end; border-bottom-right-radius:4px; font-weight:500;}
+  .chat-input{display:flex; gap:10px; padding:16px; border-top:1px solid var(--border);}
+  .chat-input input{flex:1;}
+
+  /* DASHBOARD */
+  .stat-grid{display:grid; grid-template-columns:repeat(4,1fr); gap:14px; margin-bottom:32px;}
+  .stat-card{background:var(--surface); border:1px solid var(--border); border-radius:var(--radius); padding:20px;}
+  .stat-card .num{font-family:var(--font-display); font-size:2rem; font-weight:700; color:var(--cyan);}
+  .stat-card .lbl{color:var(--text-dim); font-size:0.85rem; margin-top:4px;}
+
+  /* AUTH MODAL */
+  .modal-overlay{
+    position:fixed; inset:0; background:rgba(5,7,13,0.7); backdrop-filter:blur(6px);
+    display:none; align-items:center; justify-content:center; z-index:100;
+  }
+  .modal-overlay.active{display:flex;}
+  .modal{
+    background:var(--surface); border:1px solid var(--border); border-radius:var(--radius);
+    padding:32px; width:380px; position:relative;
+  }
+  .modal h3{font-family:var(--font-display); font-size:1.3rem; margin-bottom:18px;}
+  .modal label{font-size:0.8rem; color:var(--text-dim); display:block; margin:14px 0 6px;}
+  .modal .close{position:absolute; top:18px; right:18px; cursor:pointer; color:var(--text-dim); background:none; border:none; font-size:1.1rem;}
+  .auth-tabs{display:flex; gap:8px; margin-bottom:6px;}
+  .auth-tabs button{flex:1;}
+  .auth-msg{font-size:0.8rem; color:var(--text-dim); margin-top:14px; min-height:18px;}
+
+  footer{
+    border-top:1px solid var(--border); padding:30px 5vw; color:var(--text-dim);
+    font-size:0.85rem; display:flex; justify-content:space-between; flex-wrap:wrap; gap:10px;
+  }
+
+  @media(max-width:900px){
+    .hero{grid-template-columns:1fr; text-align:center;}
+    .hero p{margin:0 auto 30px;}
+    .hero-ctas{justify-content:center;}
+    .grid-3, .company-grid, .stat-grid, .mock-setup{grid-template-columns:repeat(2,1fr);}
+    .company-grid{grid-template-columns:repeat(2,1fr);}
+    .nav-links{display:none;}
+    .core-system{height:300px;}
+  }
+</style>
+</head>
+<body>
+<div class="bg-grid"></div>
+
+<nav>
+  <div class="logo"><span class="mark"></span>INTERVIEW PREP <small>CORE</small></div>
+  <div class="nav-links" id="navLinks">
+    <button data-view="home" class="active">Home</button>
+    <button data-view="aptitude">Aptitude</button>
+    <button data-view="companies">Company Prep</button>
+    <button data-view="interview">AI Mock Interview</button>
+    <button data-view="dashboard">Dashboard</button>
+  </div>
+  <div style="display:flex; gap:10px;">
+    <button class="btn ghost" id="loginBtn">Log in</button>
+    <button class="btn primary" id="signupBtn">Sign up</button>
+  </div>
+</nav>
+
+<main>
+
+  <!-- HOME -->
+  <section class="view active" id="view-home">
+    <div class="hero">
+      <div>
+        <span class="eyebrow">// One core. Every prep resource.</span>
+        <h1>Stop tab-hopping.<br>Prep from the <span class="grad">Core</span>.</h1>
+        <p>Aptitude tests, coding patterns, and HR rounds &mdash; the kind of material spread across Talentely, W3Schools, IndiaBix and GeeksforGeeks &mdash; gathered into a single command center, plus AI-powered mock interviews and real MNC question banks.</p>
+        <div class="hero-ctas">
+          <button class="btn primary" onclick="showView('aptitude')">Start a Quiz</button>
+          <button class="btn" onclick="showView('interview')">Try AI Mock Interview</button>
+        </div>
+      </div>
+      <div class="core-system" id="coreSystem">
+        <div class="orbit orbit-1"><div class="badge">TCS NQT</div></div>
+        <div class="orbit orbit-2"><div class="badge">Google</div><div class="badge b2">Aptitude</div></div>
+        <div class="orbit orbit-3"><div class="badge">Microsoft</div><div class="badge b2">CTS</div><div class="badge b3">HR Round</div></div>
+        <div class="core-orb"></div>
+      </div>
+    </div>
+
+    <div class="source-strip">
+      <span class="label">Aggregated, in one place:</span>
+      <span>Quant &amp; Logical Reasoning</span>
+      <span>Verbal Ability</span>
+      <span>Coding Patterns</span>
+      <span>Company-specific PYQs</span>
+      <span>HR &amp; Behavioral Rounds</span>
+      <span>AI Mock Interviews</span>
+    </div>
+
+    <div class="section-head">
+      <span class="eyebrow">// Why IPC</span>
+      <h2>Everything that used to take six tabs</h2>
+      <p>IPC pulls the prep workflow people piece together across multiple sites into one focused experience.</p>
+    </div>
+    <div class="grid-3">
+      <div class="card">
+        <div class="icon">📊</div>
+        <h3>Aptitude &amp; Quizzes</h3>
+        <p>Timed quant, logical reasoning and verbal sets, similar to what you'd find on IndiaBix or Talentely, with instant scoring and explanations.</p>
+      </div>
+      <div class="card">
+        <div class="icon">🏢</div>
+        <h3>MNC Question Banks</h3>
+        <p>Previous 5 years' questions and round-wise patterns for TCS, Cognizant (CTS), Infosys, Wipro, Accenture, Amazon, Google and Microsoft.</p>
+      </div>
+      <div class="card">
+        <div class="icon">🤖</div>
+        <h3>AI Mock Interview</h3>
+        <p>Pick a company and role, then run a live mock interview with an AI interviewer that asks follow-ups and gives feedback.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- APTITUDE -->
+  <section class="view" id="view-aptitude">
+    <div class="section-head">
+      <span class="eyebrow">// Practice</span>
+      <h2>Aptitude &amp; Reasoning Quiz</h2>
+      <p>Pick a category and attempt a timed quiz. Your score and explanations are shown at the end.</p>
+    </div>
+    <div class="quiz-categories" id="quizCategories"></div>
+    <div class="quiz-box" id="quizBox"></div>
+  </section>
+
+  <!-- COMPANIES -->
+  <section class="view" id="view-companies">
+    <div class="section-head">
+      <span class="eyebrow">// MNC Question Banks</span>
+      <h2>Company-wise Previous Year Questions</h2>
+      <p>Round patterns and previous 5 years' questions for top recruiters. Click a company to expand.</p>
+    </div>
+    <div class="company-grid" id="companyGrid"></div>
+    <div class="company-detail" id="companyDetail"></div>
+  </section>
+
+  <!-- MOCK INTERVIEW -->
+  <section class="view" id="view-interview">
+    <div class="section-head">
+      <span class="eyebrow">// AI Mock Interview</span>
+      <h2>Practice with an AI interviewer</h2>
+      <p>Choose a company and role, then start the conversation. Responses come from the backend's AI endpoint (see README to connect your API key).</p>
+    </div>
+    <div class="mock-setup">
+      <select id="interviewCompany">
+        <option>TCS</option><option>Cognizant (CTS)</option><option>Infosys</option>
+        <option>Wipro</option><option>Accenture</option><option>Amazon</option>
+        <option>Google</option><option>Microsoft</option>
+      </select>
+      <select id="interviewRole">
+        <option>Software Engineer (Entry Level)</option>
+        <option>Frontend Developer</option>
+        <option>Data Analyst</option>
+        <option>System Administrator</option>
+        <option>Product Manager</option>
+      </select>
+    </div>
+    <div class="chat-window">
+      <div class="chat-messages" id="chatMessages">
+        <div class="msg ai">Pick a company and role above, then say "start" to begin your mock interview.</div>
+      </div>
+      <div class="chat-input">
+        <input type="text" id="chatInput" placeholder="Type your answer or 'start'..." />
+        <button class="btn primary" id="chatSend">Send</button>
+      </div>
+    </div>
+  </section>
+
+  <!-- DASHBOARD -->
+  <section class="view" id="view-dashboard">
+    <div class="section-head">
+      <span class="eyebrow">// Your Progress</span>
+      <h2>Dashboard</h2>
+      <p>A snapshot of this session's activity. Sign in to save progress across devices via Firebase.</p>
+    </div>
+    <div class="stat-grid">
+      <div class="stat-card"><div class="num" id="statQuizzes">0</div><div class="lbl">Quizzes attempted</div></div>
+      <div class="stat-card"><div class="num" id="statScore">0%</div><div class="lbl">Average score</div></div>
+      <div class="stat-card"><div class="num" id="statCompanies">0</div><div class="lbl">Companies reviewed</div></div>
+      <div class="stat-card"><div class="num" id="statInterviews">0</div><div class="lbl">Mock interviews</div></div>
+    </div>
+    <div class="card">
+      <h3>Account</h3>
+      <p id="accountStatus" style="margin-top:8px;">You're browsing as a guest. Sign in to sync this dashboard with Firebase.</p>
+    </div>
+  </section>
+
+</main>
+
+<footer>
+  <span>© 2026 Interview Preparation Core</span>
+  <span>Built for job seekers prepping for top MNCs</span>
+</footer>
+
+<!-- AUTH MODAL -->
+<div class="modal-overlay" id="authOverlay">
+  <div class="modal">
+    <button class="close" id="closeModal">✕</button>
+    <div class="auth-tabs">
+      <button class="btn active" id="tabLogin">Log in</button>
+      <button class="btn" id="tabSignup">Sign up</button>
+    </div>
+    <h3 id="authTitle">Log in to IPC</h3>
+    <label>Email</label>
+    <input type="text" id="authEmail" placeholder="you@example.com" />
+    <label>Password</label>
+    <input type="text" id="authPassword" placeholder="••••••••" />
+    <div style="margin-top:18px; display:flex; flex-direction:column; gap:10px;">
+      <button class="btn primary" id="authSubmit">Log in</button>
+      <button class="btn" id="googleAuth">Continue with Google</button>
+    </div>
+    <div class="auth-msg" id="authMsg"></div>
+  </div>
+</div>
+
+<script type="module" src="firebase-config.js"></script>
+<script src="data.js"></script>
+<script src="app.js"></script>
+</body>
+</html>
