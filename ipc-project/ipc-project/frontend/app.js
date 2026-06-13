@@ -348,3 +348,10 @@ coreSystem.addEventListener("mouseleave", () => {
 // ---------- INIT ----------
 renderCategories();
 renderQuiz();
+document.getElementById("startQuizBtn").addEventListener("click", () => {
+    showView("aptitude");
+});
+
+document.getElementById("startInterviewBtn").addEventListener("click", () => {
+    showView("interview");
+});
